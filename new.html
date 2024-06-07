@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejemplo Completo de JavaScript</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        #result {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Formulario de Datos</h1>
+    <form id="dataForm">
+        <label for="nombre">Nombre:</label>
+        <input type="text" id="nombre" name="nombre" required><br><br>
+        <label for="edad">Edad:</label>
+        <input type="number" id="edad" name="edad" required><br><br>
+        <label for="direccion">Dirección:</label>
+        <input type="text" id="direccion" name="direccion" required><br><br>
+        <label for="licencia">¿Posee licencia de conducir?:</label>
+        <select id="licencia" name="licencia" required>
+            <option value="si">Sí</option>
+            <option value="no">No</option>
+        </select><br><br>
+        <button type="submit">Enviar</button>
+    </form>
+    <div id="result"></div>
+
+    <script>
+        document.getElementById('dataForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            // Obtener valores del formulario (Variables)
+            const nombre = document.getElementById('nombre').value;
+            const edad = parseInt(document.getElementById('edad').value);
+            const direccion = document.getElementById('direccion').value;
+            const licencia = document.getElementById('licencia').value;
+
+            // Condicionales
+            let mayoriaEdadMensaje = edad >= 18 ? "Eres mayor de edad." : "Eres menor de edad.";
+            let licenciaMensaje = licencia === "si" ? "Tienes licencia de conducir." : "No tienes licencia de conducir.";
+
+            // Crear objeto persona
+            const persona = {
+                nombre: nombre,
+                edad: edad,
+                direccion: direccion,
+                saludar: function() {
+                    return `Hola, mi nombre es ${this.nombre}`;
+                },
+                mostrarDireccion: function() {
+                    return `Vivo en ${this.direccion}`;
+                }
+            };
+
+            // Convertir objeto a JSON y almacenar en localStorage
+            localStorage.setItem('persona', JSON.stringify(persona));
+
+            // Recuperar y convertir JSON a objeto
+            const personaStorage = JSON.parse(localStorage.getItem('persona'));
+
+            // Manipulación del DOM
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = `
+                <h2>Resultados:</h2>
+                <p>${mayoriaEdadMensaje}</p>
+                <p>${licenciaMensaje}</p>
+                <p>${persona.saludar()}</p>
+                <p>${persona.mostrarDireccion()}</p>
+            `;
+
+            // Crear array de licencias y métodos de array
+            const licencias = [licencia];
+            resultDiv.innerHTML += '<h3>Iterando sobre licencias:</h3>';
+            licencias.forEach((l, index) => {
+                resultDiv.innerHTML += `<p>Licencia ${index + 1}: ${l}</p>`;
+            });
+
+            // Operadores avanzados
+            // Spread operator
+            const nuevasLicencias = [...licencias, 'pendiente'];
+            resultDiv.innerHTML += `<p>Nuevas licencias: ${nuevasLicencias.join(', ')}</p>`;
+
+            // Desestructuración
+            const [primeraLicencia, segundaLicencia] = nuevasLicencias;
+            resultDiv.innerHTML += `<p>Primera licencia: ${primeraLicencia}</p>`;
+            resultDiv.innerHTML += segundaLicencia ? `<p>Segunda licencia: ${segundaLicencia}</p>` : `<p>No hay segunda licencia</p>`;
+
+            // Ciclo for
+            resultDiv.innerHTML += '<h3>Iterando con for:</h3>';
+            for (let i = 0; i < nuevasLicencias.length; i++) {
+                resultDiv.innerHTML += `<p>Licencia ${i + 1}: ${nuevasLicencias[i]}</p>`;
+            }
+        });
+    </script>
+</body>
+</html>
